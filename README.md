@@ -1,49 +1,83 @@
 # Class-Final
 I learned how to use all the funditmentals of c++, like vectors, arrays, classes. Also how to implement public and private class structures.
 
-int main() {
-    Roster classRoster;
-    const int numDays = 5;
+void Roster::parse(string row) {
 
-    // Student information
-    const string studentData[] = {
-     "A1,John,Smith,John1989@gm ail.com,20,30,35,40,SECURITY",
-     "A2,Suzan,Erickson,Erickson_1990@gmailcom,19,50,30,40,NETWORK",
-     "A3,Jack,Napoli,The_lawyer99yahoo.com,19,20,40,33,SOFTWARE",
-     "A4,Erin,Black,Erin.black@comcast.net,22,50,58,40,SECURITY",
-     "A5,William,Joiner,wjoine6@wgu.edu,24,12,25,54,SOFTWARE"
-    };
+	regex regex("\\,");
+	std::vector<string>splitter(std::sregex_token_iterator(row.begin(), row.end(), regex, -1), std::sregex_token_iterator());
 
-    cout << "Course: Scripting and Programming Applications (C867)" << endl;
-    cout << "Programming Language Used: C++" << endl;
-    cout << "Student ID: 006708286" << endl;
-    cout << "Name: William Joiner" << endl << endl;
+	DegreeProgram degree = DegreeProgram::SOFTWARE;
+	if(splitter.at(8).back() == 'K') degree = DegreeProgram::NETWORK;
+	if (splitter.at(8).back() == 'Y') degree = DegreeProgram::SECURITY;
+	add(splitter.at(0), splitter.at(1), splitter.at(2), splitter.at(3), stod(splitter.at(4)), stod(splitter.at(5)), stod(splitter.at(6)), stod(splitter.at(7)), degree);
+}
 
-    for (int i = 0; i < numDays; i++)
-        classRoster.parse(studentData[i]);
+void Roster::add(string studentID, string firstName, string lastName, string email, int Age, int daysC1, int daysC2, int daysC3, DegreeProgram degreeProgram) {
+	int parr[3] = { daysC1, daysC2, daysC3 };
+	classRosterArray[++lastIndex] = new Student(studentID, firstName, lastName, email, Age, parr, degreeProgram); // need to change classrosterarray
+}
 
-    cout << "Displaying all Students: " << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << studentData[i] << endl;
-    }
+void Roster::printAll() {
 
-    cout << endl << "Displaying Students with invalid emails: " << endl;
-    classRoster.printInvalidEmails();
+	for (int i = 0; i <= Roster::lastIndex; i++) Roster::classRosterArray[i]->print();
+}
 
-    cout << endl << "Displaying average time to complete the class: " << endl;
-      for (int i = 0; i < numDays; i++)
-        classRoster.printAverageDaysInCourse(classRoster.classRosterArray[i]->getID());
+void Roster::printByDegreeProgram(DegreeProgram degree) {
 
-    cout << endl << "Displaying all Students in the software degree program: " << endl;
-    classRoster.printByDegreeProgram(DegreeProgram::SOFTWARE);
-      
+	for (int i = 0; i <= Roster::lastIndex; i++) 
+		if (Roster::classRosterArray[i]->getDegreeProgram() == degree) classRosterArray[i]->print();
+	
+}
 
-    // removing student A3
-    classRoster.remove("A3");
+void Roster::printInvalidEmails() {
+	for (int i = 0; i <= Roster::lastIndex; i++) {
 
-    // removing student A3 again
-    classRoster.remove("A3");
-    system("pause");
+		string id = classRosterArray[i]->getEmail();
+		if ((id.find(' ') != string::npos) || (id.find('.') == string::npos) || (id.find('@') == string::npos))
 
-    return 0;
+			cout << id << " is invalid!" << endl;
+		}
+	}
+
+void Roster::printAverageDaysInCourse(string studentID) {
+		for (int i = 0; i <= Roster::lastIndex; i++) {
+			if (classRosterArray[i]->getID() == studentID) {
+
+				cout << studentID << ": ";
+				cout << (classRosterArray[i]->getNumDays()[0]
+					+ classRosterArray[i]->getNumDays()[1]
+					+ classRosterArray[i]->getNumDays()[2]) / 3.0 << endl;
+			}
+		}
+	}
+
+void Roster::remove(string studentID) {
+	bool success = false;
+	for (int i = 0; i <= Roster::lastIndex; i++)
+	{
+		if (classRosterArray[i]->getID() == studentID)
+		{
+			success = true;
+			delete classRosterArray[i];
+			classRosterArray[i] = classRosterArray[i + 1];
+			classRosterArray[i + 1] = classRosterArray[i + 2];
+			Roster::lastIndex--;
+		}
+	}
+
+   if (success) {
+
+	cout << "Removing " << studentID << endl;
+	printAll();
+}
+   else 
+	   cout << "The Student with the ID: " << studentID << " was not found." << endl;
+}
+
+Roster::~Roster() {
+
+	for (int i = 0; i < lastIndex; i++) {
+		delete classRosterArray[i];
+		classRosterArray[i] = nullptr;
+	}
 }
