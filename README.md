@@ -1,49 +1,59 @@
-# Class-Final
-I learned how to use all the funditmentals of c++, like vectors, arrays, classes. Also how to implement public and private class structures.
+// Constructors
+Student::Student() {
 
-int main() {
-    Roster classRoster;
-    const int numDays = 5;
+	this->studentID = "";
+	this->firstName = "";
+	this->lastName = "";
+	this->email = "";
+	this->age = 0;
+	for (int i = 0; i < numDaysSize; i++) this->numDays[i] = 0;
+	this->degreeProgram = DegreeProgram::SOFTWARE;
+}
 
-    // Student information
-    const string studentData[] = {
-     "A1,John,Smith,John1989@gm ail.com,20,30,35,40,SECURITY",
-     "A2,Suzan,Erickson,Erickson_1990@gmailcom,19,50,30,40,NETWORK",
-     "A3,Jack,Napoli,The_lawyer99yahoo.com,19,20,40,33,SOFTWARE",
-     "A4,Erin,Black,Erin.black@comcast.net,22,50,58,40,SECURITY",
-     "A5,William,Joiner,wjoine6@wgu.edu,24,12,25,54,SOFTWARE"
-    };
+Student::Student(string studentID, string firstName, string lastName, string email, int age, int numDays[], DegreeProgram degreeProgram) {
 
-    cout << "Course: Scripting and Programming Applications (C867)" << endl;
-    cout << "Programming Language Used: C++" << endl;
-    cout << "Student ID: 006708286" << endl;
-    cout << "Name: William Joiner" << endl << endl;
+	this->studentID = studentID;
+	this->firstName = firstName;
+	this->lastName = lastName;
+	this->email = email;
+	this->age = age;
+	for (int i = 0; i < numDaysSize; i++) this->numDays[i] = numDays[i];
+	this->degreeProgram = degreeProgram;
+}
 
-    for (int i = 0; i < numDays; i++)
-        classRoster.parse(studentData[i]);
+//Destructor
+Student::~Student() {}
 
-    cout << "Displaying all Students: " << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << studentData[i] << endl;
-    }
+//getters
+string Student::getID() { return this->studentID;}
+string Student::getFirstName() {return this->firstName;}
+string Student::getLastName() {return this->lastName;}
+string Student::getEmail() {return this->email;}
+int Student::getAge() {return this->age;}
+int* Student::getNumDays() {return this->numDays;}
+DegreeProgram Student::getDegreeProgram() {return this->degreeProgram;}
 
-    cout << endl << "Displaying Students with invalid emails: " << endl;
-    classRoster.printInvalidEmails();
+//setters
+void Student::setID(string ID) { this->studentID = ID; } 
+void Student::setFirstName(string firstname) { this->firstName = firstname; }
+void Student::setLastName(string lastname) { this->lastName = lastname; }
+void Student::setEmail(string email) { this->email = email; }
+void Student::setAge(int age) { this->age = age; }
+void Student::setNumDays(const int numDays[]) 
+{
+	for (int i = 0; i < numDaysSize; i++) this->numDays[i] = numDays[i];
+}
+void Student::setDegreeProgram(DegreeProgram degreeProgram) { this->degreeProgram = degreeProgram; } 
 
-    cout << endl << "Displaying average time to complete the class: " << endl;
-      for (int i = 0; i < numDays; i++)
-        classRoster.printAverageDaysInCourse(classRoster.classRosterArray[i]->getID());
-
-    cout << endl << "Displaying all Students in the software degree program: " << endl;
-    classRoster.printByDegreeProgram(DegreeProgram::SOFTWARE);
-      
-
-    // removing student A3
-    classRoster.remove("A3");
-
-    // removing student A3 again
-    classRoster.remove("A3");
-    system("pause");
-
-    return 0;
+void Student::print() {
+	cout << this->studentID << '\t';
+	cout << this->firstName << '\t';
+	cout << this->lastName << '\t';
+	cout << this->email << '\t';
+	cout << this->age << '\t';
+	cout << this->numDays[0] << ',';
+	cout << this->numDays[1] << ',';
+	cout << this->numDays[2] << '\t';
+	cout << degreeProgramStrings[(int)this->degreeProgram] << '\n';
+	cout << endl;
 }
