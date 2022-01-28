@@ -16,7 +16,7 @@ int main() {
 
     cout << "Course: Scripting and Programming Applications (C867)" << endl;
     cout << "Programming Language Used: C++" << endl;
-    cout << "Student ID: 006708286" << endl;
+    cout << "Student ID: xxxxxxx" << endl;
     cout << "Name: William Joiner" << endl << endl;
 
     for (int i = 0; i < numDays; i++)
